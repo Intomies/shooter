@@ -4,6 +4,7 @@ from pygame import Surface, K_w, K_a, K_s, K_d
 from pygame.image import load as load_image
 from pygame.key import get_pressed, ScancodeWrapper
 from pygame.sprite import Group
+from pygame.time import get_ticks
 
 from classes.entities.Entity import Entity
 from utils.config import HitboxInflate, Paths, PlayerActionDirections, PlayerActions, PlayerAnimations
@@ -17,7 +18,7 @@ class Player(Entity):
             groups: list[Group], 
             obstacle_sprites: Group,
             position: tuple[int, int]
-            ):
+            ) -> None:
         super().__init__(groups, obstacle_sprites)
 
         self.display = display
@@ -32,39 +33,30 @@ class Player(Entity):
         self.facing: str = f'{PlayerActionDirections.down}'
         self.action: str = f'{PlayerActions.idle}'
         self.status: str = f'{self.facing}_{self.action}'
+        
         self.attacking: bool = False
+        self.attack_time: Optional[int] = None
 
 
 
     def handle_input(self) -> None:
         keys: ScancodeWrapper = get_pressed()
-        walk: str = PlayerActions.walk
-
-        if self.attacking: return
-
         if keys[K_w]:
             self.direction.y = -1
-            self.action = PlayerActions.walk
         elif keys[K_s]:
             self.direction.y = 1
-            self.action = PlayerActions.walk
         else: 
             self.direction.y = 0
+        
         if keys[K_a]:
             self.direction.x = -1
-            self.action = PlayerActions.walk
         elif keys[K_d]:
             self.direction.x = 1
-            self.action = PlayerActions.walk
         else: 
             self.direction.x = 0
 
-        if self.direction == (0,0): self.action = PlayerActions.idle 
 
-        self.status = f'{self.facing}_{self.action}'
-
-
-    def handle_direction(self, mouse_x: int, mouse_y: int):
+    def handle_direction(self, mouse_x: int, mouse_y: int) -> None:
         # Determine quadrant and triangle
         if mouse_y > (self.display_height / self.display_width) * mouse_x:  # Below top-left to bottom-right
             if mouse_y > (-self.display_height / self.display_width) * mouse_x + self.display_height:  # Below top-right to bottom-left
@@ -77,7 +69,26 @@ class Player(Entity):
             else:
                 self.facing = PlayerActionDirections.up
 
+
+    def set_status(self) -> None:
+        if self.direction != (0,0): self.action = PlayerActions.walk
+        elif self.attacking: self.action = PlayerActions.attack
+        else: self.action = PlayerActions.idle
+
         self.status = f'{self.facing}_{self.action}'
+
+    
+    def handle_attack(self) -> None:
+        self.attacking = True
+        self.attack_time = get_ticks()
+
+
+    def handle_cooldowns(self) -> None:
+        current_time: int = get_ticks()
+
+        if self.attacking:
+            if current_time - self.attack_time > self.attack_cooldown:
+                self.attacking = False
 
 
     def animate(self) -> None:
@@ -94,4 +105,5 @@ class Player(Entity):
 
     def update(self) -> None:
         self.handle_input()
+        self.set_status()
         self.animate()
