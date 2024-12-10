@@ -1,6 +1,6 @@
 from dataclasses import fields
 from typing import Optional
-from pygame import MOUSEMOTION, Surface, K_w, K_a, K_s, K_d
+from pygame import MOUSEBUTTONDOWN, MOUSEMOTION, Surface, K_w, K_a, K_s, K_d
 from pygame.event import Event
 from pygame.image import load as load_image
 from pygame.key import get_pressed, ScancodeWrapper
@@ -47,6 +47,10 @@ class Player(Entity):
         if event and event.type == MOUSEMOTION:
             self.handle_direction()
         keys: ScancodeWrapper = get_pressed()
+
+        if event and event.type == MOUSEBUTTONDOWN:
+            self.handle_attack()
+        
         if keys[K_w]:
             self.direction.y = -1
         elif keys[K_s]:
