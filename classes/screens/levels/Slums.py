@@ -1,7 +1,6 @@
 from typing import Optional
-from pygame import MOUSEMOTION, Rect, Surface
+from pygame import Rect, Surface
 from pygame.event import Event
-from pygame.mouse import get_pos as get_mouse_pos
 from pygame.sprite import Group
 
 from classes.entities.Player import Player

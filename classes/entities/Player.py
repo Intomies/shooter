@@ -56,7 +56,6 @@ class Player(Entity):
         if self.event.type == MOUSEBUTTONDOWN:
             if self.event.button == 1:
                 self.attacking = True
-                self.handle_attack()
         
         if self.event.type == MOUSEBUTTONUP:
             self.attacking = False
@@ -124,9 +123,7 @@ class Player(Entity):
         self.image.set_alpha(255)
 
 
-
     def update(self) -> None:
         self.handle_input()
-        self.handle_cooldowns()
         self.set_status()
         self.animate()
