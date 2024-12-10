@@ -126,3 +126,13 @@ class PlayerAnimations:
     down_attack: str = 'down_attack'
     left_attack: str = 'left_attack'
     right_attack: str = 'right_attack'
+
+
+@dataclass(frozen=True)
+class PlayerBaseStats:
+    health: int = 100
+    attack_cooldown: int = 400
+    attack_power: int = 10
+    move_speed: int = 5
+    action_speed: int = 6
+    invulnerability_duration: int = 500
