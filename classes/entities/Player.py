@@ -117,10 +117,7 @@ class Player(Entity):
         
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation): self.frame_index = 0
-        
         self.image = animation[int(self.frame_index)]
-
-        self.image.set_alpha(255)
 
 
     def update(self) -> None:
