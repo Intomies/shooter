@@ -1,0 +1,8 @@
+[
+    {
+        "name": "pistol",
+        "cooldown": 100,
+        "damage": 15,
+        "icon": "./data/graphics/weapons/pistol/full.png"
+    }
+]
