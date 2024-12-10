@@ -32,7 +32,7 @@ class Slums(State):
 
 
     def handle_event(self, event: Event) -> None:
-        self.event = event
+        self.player.set_event(event)
 
     
     def create_screen(self) -> None: 
@@ -48,5 +48,5 @@ class Slums(State):
     
     
     def run(self) -> None:
-        self.player.update(self.event)
+        self.player.update()
         self.visible_sprites.custom_draw(self.player)

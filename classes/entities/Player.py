@@ -1,6 +1,6 @@
 from dataclasses import fields
 from typing import Optional
-from pygame import MOUSEBUTTONDOWN, MOUSEMOTION, Surface, K_w, K_a, K_s, K_d
+from pygame import MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION, Surface, K_w, K_a, K_s, K_d
 from pygame.event import Event
 from pygame.image import load as load_image
 from pygame.key import get_pressed, ScancodeWrapper
@@ -31,6 +31,7 @@ class Player(Entity):
         self.hitbox = self.rect.inflate(0, HitboxInflate.player)
 
         self.assets: dict[str, Optional[list[Surface]]] = { action.name: get_graphics_images_from_folder(Paths.player_action(action.name)) for action in fields(PlayerAnimations) }
+        self.event: Optional[Event] = None
 
         self.facing: str = f'{PlayerActionDirections.down}'
         self.action: str = f'{PlayerActions.idle}'
@@ -42,14 +43,25 @@ class Player(Entity):
         self.attack_cooldown: int = PlayerBaseStats.attack_cooldown
 
 
+    def set_event(self, event: Event) -> None:
+        self.event = event
 
-    def handle_input(self, event: Event) -> None:
-        if event and event.type == MOUSEMOTION:
+
+    def handle_input(self) -> None:
+        if not self.event: return
+
+        if self.event.type == MOUSEMOTION:
             self.handle_direction()
-        keys: ScancodeWrapper = get_pressed()
 
-        if event and event.type == MOUSEBUTTONDOWN:
-            self.handle_attack()
+        if self.event.type == MOUSEBUTTONDOWN:
+            if self.event.button == 1:
+                self.attacking = True
+                self.handle_attack()
+        
+        if self.event.type == MOUSEBUTTONUP:
+            self.attacking = False
+        
+        keys: ScancodeWrapper = get_pressed()
         
         if keys[K_w]:
             self.direction.y = -1
@@ -90,7 +102,6 @@ class Player(Entity):
 
     
     def handle_attack(self) -> None:
-        self.attacking = True
         self.attack_time = get_ticks()
 
 
@@ -114,8 +125,8 @@ class Player(Entity):
 
 
 
-    def update(self, event: Event) -> None:
-        self.handle_input(event)
+    def update(self) -> None:
+        self.handle_input()
         self.handle_cooldowns()
         self.set_status()
         self.animate()
