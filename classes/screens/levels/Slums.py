@@ -17,6 +17,7 @@ class Slums(State):
         self.display_rect: Rect = self.display.get_rect(topleft=(0,0))
         self.screen_width: int = self.display.get_width()
         self.screen_height: int = self.display.get_height()
+        self.event: Optional[Event] = None
 
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = Group()
@@ -31,10 +32,8 @@ class Slums(State):
 
 
     def handle_event(self, event: Event) -> None:
-        if event.type == MOUSEMOTION:
-            mouse_x, mouse_y = get_mouse_pos()
-            self.player.handle_direction(mouse_x, mouse_y)
-    
+        self.event = event
+
     
     def create_screen(self) -> None: 
         self.player = Player(
@@ -49,5 +48,5 @@ class Slums(State):
     
     
     def run(self) -> None:
-        self.visible_sprites.update()
+        self.player.update(self.event)
         self.visible_sprites.custom_draw(self.player)
