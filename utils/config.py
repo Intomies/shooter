@@ -7,6 +7,7 @@ from pygame.font import Font
 class Apps:
     name: str = 'Shooter'
     fps: int = 60
+    tilesize: int = 64
 
 
 class Animations:
@@ -54,7 +55,6 @@ class Fonts:
     medium_font_size: int = 72
     small_font_size: int = 36
 
-
     @classmethod
     def large(self) -> Font:
         return Font(self.__main_font_path, self.large_font_size)
@@ -86,6 +86,7 @@ class Padding:
 class Paths:
     graphics_parent: str = './data/graphics'
     player: str = 'player'
+    weapons: str = 'weapons'
 
     @classmethod
     def player_graphics(self) -> str:
@@ -94,6 +95,10 @@ class Paths:
     @classmethod
     def player_action(self, action: str) -> str:
         return os_path_join(self.graphics_parent, self.player, action)
+    
+    @classmethod
+    def weapon(self, weapon_name: str) -> str:
+        return os_path_join(self.graphics_parent, self.weapons, weapon_name)
     
 
 @dataclass(frozen=True)
@@ -136,3 +141,12 @@ class PlayerBaseStats:
     move_speed: int = 5
     action_speed: int = 6
     invulnerability_duration: int = 500
+
+
+@dataclass(frozen=True)
+class SpriteType:
+    invisible: str = 'invisible'
+    grass: str = 'grass' 
+    objects: str = 'objects'
+    enemy: str = 'enemy'
+    weapon: str = 'weapon'

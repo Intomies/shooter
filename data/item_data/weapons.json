@@ -3,6 +3,18 @@
         "name": "pistol",
         "cooldown": 100,
         "damage": 15,
-        "icon": "./data/graphics/weapons/pistol/full.png"
+        "icon": "./data/graphics/weapons/pistol/full.png",
+        "image_type": "png",
+        "x_offset": 5,
+        "y_offset": 5
+    },
+    {
+        "name": "axe",
+        "cooldown": 100,
+        "damage": 15,
+        "icon": "./data/graphics/weapons/axe/full.png",
+        "image_type": "png",
+        "x_offset": 5,
+        "y_offset": 5
     }
 ]
