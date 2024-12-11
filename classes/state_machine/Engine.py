@@ -6,7 +6,7 @@ from pygame import (
     K_ESCAPE
 )
 from pygame.cursors import arrow, diamond, broken_x, tri_left, tri_right
-from pygame.display import flip, set_caption, set_mode
+from pygame.display import flip, set_caption, set_mode, update as update_display
 from pygame.event import Event, get as get_event
 from pygame.key import get_pressed, ScancodeWrapper
 from pygame.mouse import set_cursor
@@ -43,6 +43,7 @@ class Engine:
             
             self.display.fill(Colors.background)
             self.machine.current_state.run()
+            update_display()
             
             flip()
             self.clock.tick(self.fps)
